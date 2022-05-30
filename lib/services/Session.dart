@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:nyoba/models/UserModel.dart';
 import 'package:nyoba/pages/notification/NotificationScreen.dart';
 import 'package:nyoba/utils/GlobalVariable.dart';
@@ -23,22 +22,15 @@ class Session {
       data.setString('device_token', value);
     });
 
-    final AndroidNotificationChannel channel = AndroidNotificationChannel(
-      'high_importance_channel', // id
-      'High Importance Notifications', // title
-      importance: Importance.high,
-      description:
-          'This channel is used for important notifications.', // description
-    );
 
-    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+   /* final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
+        ?.createNotificationChannel(channel);*/
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage event) async {
+  /*  FirebaseMessaging.onMessage.listen((RemoteMessage event) async {
       print("message recieved");
       print(event.notification.body);
       print(event.notification.android.imageUrl);
@@ -79,7 +71,7 @@ class Session {
             ));
         }
       }
-    });
+    });*/
     FirebaseMessaging.onMessageOpenedApp.listen((message) async {
       print('Message clicked!');
       printLog(message.notification.toString());
@@ -103,7 +95,7 @@ class Session {
     return response.bodyBytes;
   }
 
-  static Future<BigPictureStyleInformation> showBigPictureNotificationURL(String url) async {
+  /*static Future<BigPictureStyleInformation> showBigPictureNotificationURL(String url) async {
     final ByteArrayAndroidBitmap largeIcon = ByteArrayAndroidBitmap(
         await _getByteArrayFromUrl(url));
     final ByteArrayAndroidBitmap bigPicture = ByteArrayAndroidBitmap(
@@ -115,7 +107,7 @@ class Session {
 
     return bigPictureStyleInformation;
   }
-
+*/
   Future saveUser(UserModel user, String cookie) async {
     data.setBool('isLogin', true);
     data.setInt("id", user.id);
