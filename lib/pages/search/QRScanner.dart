@@ -7,7 +7,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:nyoba/provider/SearchProvider.dart';
 import 'package:nyoba/utils/utility.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+
 import 'package:flutter_screenutil/size_extension.dart';
 import '../../AppLocalizations.dart';
 
@@ -21,35 +21,17 @@ class QRScanner extends StatefulWidget {
 class _QRScannerState extends State<QRScanner> {
   TextEditingController searchController = new TextEditingController();
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  Barcode result;
-  QRViewController controller;
+
   bool flashOn = false;
 
-  searchProductByQR() async {
-    await Provider.of<SearchProvider>(context, listen: false)
-        .scanProduct(result.code, context)
-        .then((value) => this.setState(() {}));
-  }
+
 
   @override
   void initState() {
     super.initState();
   }
 
-  @override
-  void reassemble() {
-    super.reassemble();
-    if (Platform.isAndroid) {
-      controller?.pauseCamera();
-    }
-    controller?.resumeCamera();
-  }
 
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,12 +41,7 @@ class _QRScannerState extends State<QRScanner> {
         child: Scaffold(
       body: Stack(
         children: [
-          Container(
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.white, width: 10),
-                borderRadius: BorderRadius.circular(30)),
-            child: buildQrScan(),
-          ),
+
           Visibility(visible: searchProvider.loadingQr, child: customLoading()),
           Positioned(
               top: 0,
@@ -136,7 +113,7 @@ class _QRScannerState extends State<QRScanner> {
             right: 15,
             child: InkWell(
               onTap: () async {
-                await controller?.toggleFlash();
+               // await controller?.toggleFlash();
                 setState(() {
                   flashOn = !flashOn;
                 });
@@ -193,47 +170,8 @@ class _QRScannerState extends State<QRScanner> {
     ));
   }
 
-  Widget buildQrScan() {
-    // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
-    var scanArea = (MediaQuery.of(context).size.width < 400 ||
-            MediaQuery.of(context).size.height < 400)
-        ? 250.0
-        : 300.0;
-    // To ensure the Scanner view is properly sizes after rotation
-    // we need to listen for Flutter SizeChanged notification and update controller
-    return QRView(
-      key: qrKey,
-      onQRViewCreated: _onQRViewCreated,
-      overlay: QrScannerOverlayShape(
-          borderColor: primaryColor,
-          borderRadius: 30,
-          borderLength: 60,
-          borderWidth: 30,
-          cutOutSize: scanArea),
-      onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
-    );
-  }
 
-  void _onQRViewCreated(QRViewController controller) {
-    setState(() {
-      this.controller = controller;
-    });
-    controller.scannedDataStream.listen((scanData) async {
-      await controller.pauseCamera();
-      setState(() {
-        result = scanData;
-      });
-      print(result.code);
-      searchProductByQR();
-    });
-  }
 
-  void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
-    log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
-    if (!p) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('no Permission')),
-      );
-    }
-  }
+
+
 }

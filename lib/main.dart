@@ -30,7 +30,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nyoba/provider/BannerProvider.dart';
 import 'package:nyoba/provider/CategoryProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wp_json_api/wp_json_api.dart';
 
 Future<void> _messageHandler(RemoteMessage message) async {
   print('background message ${message.notification.body}');
